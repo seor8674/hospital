@@ -2,8 +2,13 @@ package com.example.hospital.web.user.service;
 
 import com.example.hospital.config.auth.Authority;
 import com.example.hospital.config.util.SecurityUtil;
+import com.example.hospital.web.doctor.domain.Doctor;
+import com.example.hospital.web.doctor.domain.DoctorRepository;
 import com.example.hospital.web.exception.ErrorCode;
 import com.example.hospital.web.exception.GlobalApiException;
+import com.example.hospital.web.reservation.domain.Reservation;
+import com.example.hospital.web.reservation.domain.ReservationRepository;
+import com.example.hospital.web.reservation.dto.ReservationRequestDto;
 import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.domain.UserRepository;
 import com.example.hospital.web.user.dto.UserDto;
@@ -21,6 +26,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final ReservationRepository reservationRepository;
+    private final DoctorRepository doctorRepository;
+
+
     @Transactional
     public User signup(UserDto userDto) {
         if (userRepository.findOneWithAuthoritiesByuserName(userDto.getUserName()).orElse(null) != null) {
@@ -50,5 +59,18 @@ public class UserService {
     @Transactional(readOnly = true)
     public Optional<User> getMyUserWithAuthorities() {
         return SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByuserName);
+    }
+
+    @Transactional
+    public Long makeReservation(ReservationRequestDto reservationRequestDto){
+        User user = userRepository.findByuserName(reservationRequestDto.getUserName())
+                .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_USER));
+        Doctor doctor = doctorRepository.findByname(reservationRequestDto.getDoctorname())
+                .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_DATA));
+        Reservation reservation = new Reservation(reservationRequestDto.getTime(), doctor, user);
+        reservationRepository.save(reservation);
+        user.getReservationList().add(reservation);
+        return reservation.getId();
+
     }
 }

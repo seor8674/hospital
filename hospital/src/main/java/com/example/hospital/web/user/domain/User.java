@@ -1,16 +1,20 @@
 package com.example.hospital.web.user.domain;
 
 import com.example.hospital.config.auth.Authority;
+import com.example.hospital.web.reservation.domain.Reservation;
+import com.example.hospital.web.reservation.dto.ReservationRequestDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Getter
 @Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user")
 public class User {
@@ -40,5 +44,14 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
 
+    @OneToMany(mappedBy = "user")
+    List<Reservation> reservationList=new ArrayList<>();
 
+    public User(String userName, String password, int age, String name, boolean activated) {
+        this.userName = userName;
+        this.password = password;
+        this.age = age;
+        this.name = name;
+        this.activated = activated;
+    }
 }

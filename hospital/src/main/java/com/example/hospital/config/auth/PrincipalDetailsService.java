@@ -1,5 +1,7 @@
 package com.example.hospital.config.auth;
 
+import com.example.hospital.web.exception.ErrorCode;
+import com.example.hospital.web.exception.GlobalApiException;
 import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +29,12 @@ public class PrincipalDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String username) {
         return userRepository.findOneWithAuthoritiesByuserName(username)
                 .map(user -> createUser(username, user))
-                .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.NONE_USER.getName()));
     }
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
         if (!user.isActivated()) {
-            throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
+            throw new GlobalApiException(ErrorCode.HANDLE_ACCESS_DENIED);
         }
         List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))

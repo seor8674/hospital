@@ -2,6 +2,8 @@ package com.example.hospital.web.user.service;
 
 import com.example.hospital.config.auth.Authority;
 import com.example.hospital.config.util.SecurityUtil;
+import com.example.hospital.web.exception.ErrorCode;
+import com.example.hospital.web.exception.GlobalApiException;
 import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.domain.UserRepository;
 import com.example.hospital.web.user.dto.UserDto;
@@ -22,7 +24,7 @@ public class UserService {
     @Transactional
     public User signup(UserDto userDto) {
         if (userRepository.findOneWithAuthoritiesByuserName(userDto.getUserName()).orElse(null) != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new GlobalApiException(ErrorCode.DUPLICATE_USER);
         }
 
         Authority authority = Authority.builder()
@@ -37,8 +39,6 @@ public class UserService {
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
-
-
         return userRepository.save(user);
     }
 

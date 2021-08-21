@@ -11,7 +11,8 @@ public enum ErrorCode {
     DUPLICATE_USER("이미 존재하는 회원입니다.")
     ,HANDLE_ACCESS_DENIED("권한이 없습니다.")
     ,REQUEST_PARAMETER_ERROR("요청 파라미터 예외입니다.")
-    ,NONE_DATA("존재하지 않는 데이터입니다.");
+    ,NONE_DATA("존재하지 않는 데이터입니다.")
+    ,RESERVED_TIME("이미 예약이 완료된 시간대입니다.");
 
     private String name;
 }

@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ReservationRequestDto {
+public class ReservationModifyRequestDto {
     private LocalDateTime time;
+    private Long id;
     private String doctorname;
 }

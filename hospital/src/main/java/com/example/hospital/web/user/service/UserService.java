@@ -11,14 +11,19 @@ import com.example.hospital.web.reservation.domain.ReservationRepository;
 import com.example.hospital.web.reservation.dto.ReservationRequestDto;
 import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.domain.UserRepository;
+import com.example.hospital.web.user.dto.FindReservationResponseDto;
 import com.example.hospital.web.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,14 +68,29 @@ public class UserService {
 
     @Transactional
     public Long makeReservation(ReservationRequestDto reservationRequestDto){
-        User user = userRepository.findByuserName(reservationRequestDto.getUserName())
-                .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_USER));
+        User user = userRepository.findByuserName(SecurityUtil.getCurrentUsername()
+                .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_USER))).get();
         Doctor doctor = doctorRepository.findByname(reservationRequestDto.getDoctorname())
                 .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_DATA));
+        if(!doctor.checkreservation(reservationRequestDto.getTime())){
+            throw new GlobalApiException(ErrorCode.RESERVED_TIME);
+        }
         Reservation reservation = new Reservation(reservationRequestDto.getTime(), doctor, user);
         reservationRepository.save(reservation);
         user.getReservationList().add(reservation);
         return reservation.getId();
-
     }
+
+    @Transactional(readOnly = true)
+    public List<FindReservationResponseDto> findReservation(Pageable pageable){
+        String s = SecurityUtil.getCurrentUsername().orElseThrow(()->new GlobalApiException(ErrorCode.NONE_USER));
+        Page<Reservation> userReservation = reservationRepository.findUserReservation(s, pageable);
+        return userReservation.getContent().stream()
+                .map(FindReservationResponseDto::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+
+
+
 }

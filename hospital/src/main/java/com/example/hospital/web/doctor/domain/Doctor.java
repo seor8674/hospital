@@ -44,4 +44,13 @@ public class Doctor {
     public void changeHospital(Hospital hospital){
         this.hospital=hospital;
     }
+
+    public boolean checkreservation(LocalDateTime time){
+        for (Reservation reservation : reservationList) {
+            if(!time.isAfter(reservation.getReservationDate().plusHours(1))&&!time.isBefore(reservation.getReservationDate())){
+                return false;
+            }
+        }
+        return true;
+    }
 }

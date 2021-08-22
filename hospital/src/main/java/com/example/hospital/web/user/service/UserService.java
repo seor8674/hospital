@@ -9,9 +9,9 @@ import com.example.hospital.web.exception.GlobalApiException;
 import com.example.hospital.web.reservation.domain.Reservation;
 import com.example.hospital.web.reservation.domain.ReservationRepository;
 import com.example.hospital.web.reservation.dto.ReservationRequestDto;
+import com.example.hospital.web.reservation.dto.ReservationResponseDto;
 import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.domain.UserRepository;
-import com.example.hospital.web.user.dto.FindReservationResponseDto;
 import com.example.hospital.web.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -82,11 +82,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<FindReservationResponseDto> findReservation(Pageable pageable){
+    public List<ReservationResponseDto> findReservation(Pageable pageable){
         String s = SecurityUtil.getCurrentUsername().orElseThrow(()->new GlobalApiException(ErrorCode.NONE_USER));
-        Page<Reservation> userReservation = reservationRepository.findUserReservation(s, pageable);
+        Page<Reservation> userReservation = reservationRepository.findUserReservation(pageable,s);
         return userReservation.getContent().stream()
-                .map(FindReservationResponseDto::toResponseDto)
+                .map(ReservationResponseDto::toResponseDto)
                 .collect(Collectors.toList());
     }
 

@@ -21,13 +21,13 @@ public class Hospital {
 
     private String name;
 
-    private String area;
+    private String address;
 
     @OneToMany(mappedBy = "hospital")
     List<Doctor> doctors=new ArrayList<>();
 
-    public Hospital(String name, String area) {
+    public Hospital(String name, String address) {
         this.name = name;
-        this.area = area;
+        this.address=address;
     }
 }

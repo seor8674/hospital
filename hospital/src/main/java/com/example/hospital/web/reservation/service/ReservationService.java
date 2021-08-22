@@ -11,7 +11,6 @@ import com.example.hospital.web.reservation.dto.ReservationModifyRequestDto;
 import com.example.hospital.web.reservation.dto.ReservationRequestDto;
 import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.domain.UserRepository;
-import com.example.hospital.web.user.dto.FindReservationResponseDto;
 import com.example.hospital.web.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -11,9 +11,10 @@ import com.example.hospital.web.hospital.domain.HospitalRepository;
 import com.example.hospital.web.reservation.domain.Reservation;
 import com.example.hospital.web.reservation.domain.ReservationRepository;
 import com.example.hospital.web.reservation.dto.ReservationRequestDto;
+import com.example.hospital.web.reservation.dto.ReservationResponseDto;
 import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.domain.UserRepository;
-import com.example.hospital.web.user.dto.FindReservationResponseDto;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -106,7 +107,7 @@ class UserServiceTest {
         userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
         userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "김영희"));
         userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "박태수"));
-        List<FindReservationResponseDto> reservation = userService.findReservation(PageRequest.of(0, 2));
+        List<ReservationResponseDto> reservation = userService.findReservation(PageRequest.of(0, 2));
         assertThat(reservation.size()).isEqualTo(2);
     }
 

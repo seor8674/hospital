@@ -10,6 +10,8 @@ public interface ReservationRepositoryCustom {
 
     Reservation findByIdfetchUserandDoctor(Long id);
 
-    Page<Reservation> findUserReservation(String username, Pageable pageable);
+    Page<Reservation> findUserReservation(Pageable pageable,String username);
+
+
 
 }

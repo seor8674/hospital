@@ -43,7 +43,7 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
     }
 
     @Override
-    public Page<Reservation> findUserReservation(String username, Pageable pageable) {
+    public Page<Reservation> findUserReservation(Pageable pageable,String username) {
         QueryResults<Reservation> reservationQueryResults = jpaQueryFactory.selectFrom(reservation)
                 .join(reservation.user, user)
                 .where(user.userName.eq(username))

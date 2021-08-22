@@ -23,6 +23,7 @@ public class Doctor {
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
     private Spetialization spetialization;
 
     private int period;

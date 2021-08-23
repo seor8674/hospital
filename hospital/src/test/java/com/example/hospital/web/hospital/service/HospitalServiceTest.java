@@ -1,30 +1,37 @@
-package com.example.hospital.web.doctor.domain;
+package com.example.hospital.web.hospital.service;
 
+import com.example.hospital.web.doctor.domain.Doctor;
+import com.example.hospital.web.doctor.domain.DoctorRepository;
+import com.example.hospital.web.doctor.domain.Spetialization;
+import com.example.hospital.web.doctor.dto.DoctorResponseDto;
 import com.example.hospital.web.hospital.domain.Hospital;
 import com.example.hospital.web.hospital.domain.HospitalRepository;
+import com.example.hospital.web.hospital.dto.HospitalDetailResponseDto;
+import com.example.hospital.web.hospital.dto.HospitalResponseDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class DoctorRepositoryImplTest {
+class HospitalServiceTest {
 
     @Autowired
     HospitalRepository hospitalRepository;
 
     @Autowired
     DoctorRepository doctorRepository;
+
+    @Autowired
+    HospitalService hospitalService;
 
     @BeforeEach
     void init(){
@@ -38,7 +45,7 @@ class DoctorRepositoryImplTest {
         hospitalRepository.save(서울대병원);
         hospitalRepository.save(부산대병원);
         hospitalRepository.save(고려대병원);
-        doctorRepository.save(new Doctor("김영수",Spetialization.internal,5,인하대병원));
+        doctorRepository.save(new Doctor("김영수", Spetialization.internal,5,인하대병원));
         doctorRepository.save(new Doctor("김철수",Spetialization.plastic_surgeon,3,인하대병원));
         doctorRepository.save(new Doctor("김효수",Spetialization.Surgical,4,인하대병원));
         doctorRepository.save(new Doctor("김희수",Spetialization.Neurosurgery,8,인하대병원));
@@ -79,43 +86,19 @@ class DoctorRepositoryImplTest {
     }
 
     @Test
-    @Transactional
-    @DisplayName("전공으로 의사 조회")
-    public void findBySpetializationTest(){
-        PageRequest pageRequest = PageRequest.of(0, 3);
-        Page<Doctor> byDoctorBySpetialization = doctorRepository.findByDoctorBySpetialization(pageRequest,Spetialization.internal);
-        List<Doctor> content = byDoctorBySpetialization.getContent();
-        long totalElements = byDoctorBySpetialization.getTotalElements();
-        int totalPages = byDoctorBySpetialization.getTotalPages();
-        assertThat(content.size()).isEqualTo(3);
-        assertThat(totalElements).isEqualTo(5);
-        assertThat(totalPages).isEqualTo(2);
+    public void HospitalResponseDtoTest(){
+        PageRequest of = PageRequest.of(0, 3);
+        List<HospitalResponseDto> allHospital = hospitalService.getAllHospital(of);
+        assertThat(allHospital.size()).isEqualTo(3);
     }
+
     @Test
-    @Transactional
-    @DisplayName("병원으로 의사 조회")
-    public void findByhospitalTest(){
-        PageRequest pageRequest = PageRequest.of(0, 3);
-        Page<Doctor> byDoctorBySpetialization = doctorRepository.findByDoctorByHopitalname(pageRequest,"인하대병원");
-        List<Doctor> content = byDoctorBySpetialization.getContent();
-        long totalElements = byDoctorBySpetialization.getTotalElements();
-        int totalPages = byDoctorBySpetialization.getTotalPages();
-        assertThat(content.size()).isEqualTo(3);
-        assertThat(totalElements).isEqualTo(7); 
-        assertThat(totalPages).isEqualTo(3);
+    public void HospitalDetailResponseDtoTest(){
+        PageRequest of = PageRequest.of(0, 3);
+        HospitalDetailResponseDto 인하대병원 = hospitalService.getHospitalDetail("인하대병원");
+        assertThat(인하대병원.getAddress()).isEqualTo("인천광역시 중구 인항로 27");
+        assertThat(인하대병원.getDoctorResponseDtos().size()).isEqualTo(7);
     }
-    @Test
-    @Transactional
-    @DisplayName("병원과 전공으로 의사 조회")
-    public void findBySpetializationandHospitalTest(){
-        PageRequest pageRequest = PageRequest.of(0, 3);
-        Page<Doctor> byDoctorBySpetialization = doctorRepository.findByDoctorByHopitalnameandSpetialization(pageRequest,"인하대병원",Spetialization.internal);
-        List<Doctor> content = byDoctorBySpetialization.getContent();
-        long totalElements = byDoctorBySpetialization.getTotalElements();
-        int totalPages = byDoctorBySpetialization.getTotalPages();
-        assertThat(content.size()).isEqualTo(1);
-        assertThat(totalElements).isEqualTo(1);
-        assertThat(totalPages).isEqualTo(1);
-    }
+
 
 }

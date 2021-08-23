@@ -10,4 +10,6 @@ public interface HospitalRepositoryCustom {
     Page<Hospital> findHospitalByname(Pageable pageable,String name);
 
     Page<Hospital> findHospitalByaddress(Pageable pageable,String address);
+
+
 }

@@ -34,7 +34,6 @@ class HospitalRepositoryImplTest {
         hospitalRepository.save(new Hospital("서울대병원","서울특별시 종로구 대학로 101"));
         hospitalRepository.save(new Hospital("부산대병원","부산광역시 서구 구덕로 179"));
         hospitalRepository.save(new Hospital("고려대병원","서울특별시 성북구 고려대로 73"));
-
     }
 
     @Test

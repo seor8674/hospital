@@ -15,4 +15,6 @@ public interface DoctorRepositoryCustom {
     Page<Doctor> findByDoctorByHopitalnameandSpetialization(Pageable pageable,String Hospitalname,Spetialization spetialization);
 
 
+
+
 }

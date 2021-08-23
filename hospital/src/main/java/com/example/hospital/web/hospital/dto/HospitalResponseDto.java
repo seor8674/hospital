@@ -1,16 +1,23 @@
 package com.example.hospital.web.hospital.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.example.hospital.web.hospital.domain.Hospital;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
+@ToString
 public class HospitalResponseDto {
 
     private String name;
     private String address;
+
+    public static HospitalResponseDto toResponseDto(Hospital hospital){
+        HospitalResponseDto build = HospitalResponseDto.builder()
+                .name(hospital.getName())
+                .address(hospital.getAddress())
+                .build();
+        return build;
+    }
 }

@@ -2,7 +2,6 @@ package com.example.hospital.web.reservation.domain;
 
 import com.example.hospital.web.doctor.domain.Doctor;
 import com.example.hospital.web.doctor.domain.QDoctor;
-import com.example.hospital.web.reservation.dto.ReservationModifyRequestDto;
 import com.example.hospital.web.user.domain.QUser;
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;

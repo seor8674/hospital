@@ -66,20 +66,7 @@ public class UserService {
         return SecurityUtil.getCurrentUsername().flatMap(userRepository::findOneWithAuthoritiesByuserName);
     }
 
-    @Transactional
-    public Long makeReservation(ReservationRequestDto reservationRequestDto){
-        User user = userRepository.findByuserName(SecurityUtil.getCurrentUsername()
-                .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_USER))).get();
-        Doctor doctor = doctorRepository.findByname(reservationRequestDto.getDoctorname())
-                .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_DATA));
-        if(!doctor.checkreservation(reservationRequestDto.getTime())){
-            throw new GlobalApiException(ErrorCode.RESERVED_TIME);
-        }
-        Reservation reservation = new Reservation(reservationRequestDto.getTime(), doctor, user);
-        reservationRepository.save(reservation);
-        user.getReservationList().add(reservation);
-        return reservation.getId();
-    }
+
 
     @Transactional(readOnly = true)
     public List<ReservationResponseDto> findReservation(Pageable pageable){

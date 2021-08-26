@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -28,16 +29,11 @@ class DoctorRepositoryImplTest {
 
     @BeforeEach
     void init(){
-        Hospital 인하대병원 = new Hospital("인하대병원", "인천광역시 중구 인항로 27");
-        Hospital 건국대병원 = new Hospital("건국대병원", "서울특별시 광진구 능동로 120-1");
-        Hospital 서울대병원 = new Hospital("서울대병원", "서울특별시 종로구 대학로 101");
-        Hospital 부산대병원 = new Hospital("부산대병원", "부산광역시 서구 구덕로 179");
-        Hospital 고려대병원 = new Hospital("고려대병원", "서울특별시 성북구 고려대로 73");
-        hospitalRepository.save(인하대병원);
-        hospitalRepository.save(건국대병원);
-        hospitalRepository.save(서울대병원);
-        hospitalRepository.save(부산대병원);
-        hospitalRepository.save(고려대병원);
+        Hospital 인하대병원 = hospitalRepository.findByName("인하대병원").get();
+        Hospital 건국대병원 = hospitalRepository.findByName("건국대병원").get();
+        Hospital 서울대병원 = hospitalRepository.findByName("서울대병원").get();
+        Hospital 부산대병원 = hospitalRepository.findByName("부산대병원").get();
+        Hospital 고려대병원 = hospitalRepository.findByName("고려대병원").get();
         doctorRepository.save(new Doctor("김영수",Spetialization.internal,5,인하대병원));
         doctorRepository.save(new Doctor("김철수",Spetialization.plastic_surgeon,3,인하대병원));
         doctorRepository.save(new Doctor("김효수",Spetialization.Surgical,4,인하대병원));
@@ -60,6 +56,7 @@ class DoctorRepositoryImplTest {
         doctorRepository.save(new Doctor("서희수",Spetialization.Neurosurgery,7,서울대병원));
         doctorRepository.save(new Doctor("서민수",Spetialization.Dermatology,11,서울대병원));
         doctorRepository.save(new Doctor("서정수",Spetialization.psychiatry,13,서울대병원));
+        doctorRepository.save(new Doctor("서휘수",Spetialization.Dentistry,15,서울대병원));
 
         doctorRepository.save(new Doctor("강영수",Spetialization.internal,11,부산대병원));
         doctorRepository.save(new Doctor("강철수",Spetialization.plastic_surgeon,6,부산대병원));
@@ -81,15 +78,16 @@ class DoctorRepositoryImplTest {
     @Test
     @Transactional
     @DisplayName("전공으로 의사 조회")
+    @Rollback(false)
     public void findBySpetializationTest(){
-        PageRequest pageRequest = PageRequest.of(0, 3);
-        Page<Doctor> byDoctorBySpetialization = doctorRepository.findByDoctorBySpetialization(pageRequest,Spetialization.internal);
-        List<Doctor> content = byDoctorBySpetialization.getContent();
-        long totalElements = byDoctorBySpetialization.getTotalElements();
-        int totalPages = byDoctorBySpetialization.getTotalPages();
-        assertThat(content.size()).isEqualTo(3);
-        assertThat(totalElements).isEqualTo(5);
-        assertThat(totalPages).isEqualTo(2);
+         PageRequest pageRequest = PageRequest.of(0, 3);
+         Page<Doctor> byDoctorBySpetialization = doctorRepository.findByDoctorBySpetialization(pageRequest,Spetialization.internal);
+         List<Doctor> content = byDoctorBySpetialization.getContent();
+         long totalElements = byDoctorBySpetialization.getTotalElements();
+         int totalPages = byDoctorBySpetialization.getTotalPages();
+         assertThat(content.size()).isEqualTo(3);
+         assertThat(totalElements).isEqualTo(5);
+         assertThat(totalPages).isEqualTo(2);
     }
     @Test
     @Transactional

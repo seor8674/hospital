@@ -1,8 +1,9 @@
 package com.example.hospital.web.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import lombok.*;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -12,17 +13,18 @@ import lombok.*;
 @ToString
 public class UserDto {
 
-    @NotNull
+
+    @NotNull(message = "아이디를 입력해주세요")
     private String userName;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @NotNull
+    @NotNull(message = "비밀번호를 입력해주세요")
     private String password;
 
-    @NotNull
+    @NotNull(message = "이름를 입력해주세요")
     private String name;
 
-    @NotNull
+    @NotNull(message = "나이를 입력해주세요")
     private int age;
 
 

@@ -2,10 +2,7 @@ package com.example.hospital.web.hospital.dto;
 
 import com.example.hospital.web.doctor.dto.DoctorResponseDto;
 import com.example.hospital.web.hospital.domain.Hospital;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +11,7 @@ import java.util.stream.Collectors;
 @Setter
 @AllArgsConstructor
 @Builder
+@NoArgsConstructor
 public class HospitalDetailResponseDto {
 
     private String name;

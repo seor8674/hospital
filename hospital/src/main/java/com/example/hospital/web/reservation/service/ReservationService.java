@@ -7,7 +7,6 @@ import com.example.hospital.web.exception.ErrorCode;
 import com.example.hospital.web.exception.GlobalApiException;
 import com.example.hospital.web.reservation.domain.Reservation;
 import com.example.hospital.web.reservation.domain.ReservationRepository;
-import com.example.hospital.web.reservation.dto.ReservationModifyRequestDto;
 import com.example.hospital.web.reservation.dto.ReservationRequestDto;
 import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.domain.UserRepository;
@@ -35,9 +34,24 @@ public class ReservationService {
     }
 
     @Transactional
-    public void modifyReservation(ReservationModifyRequestDto reservationModifyRequestDto){
-        cancleReservation(reservationModifyRequestDto.getId());
-        userService.makeReservation(new ReservationRequestDto(reservationModifyRequestDto.getTime(),reservationModifyRequestDto.getDoctorname()));
+    public Long makeReservation(ReservationRequestDto reservationRequestDto){
+        User user = userRepository.findByuserName(SecurityUtil.getCurrentUsername()
+                .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_USER))).get();
+        Doctor doctor = doctorRepository.findByname(reservationRequestDto.getDoctorname())
+                .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_DATA));
+        if(!doctor.checkreservation(reservationRequestDto.getTime())){
+            throw new GlobalApiException(ErrorCode.RESERVED_TIME);
+        }
+        Reservation reservation = new Reservation(reservationRequestDto.getTime(), doctor, user);
+        reservationRepository.save(reservation);
+        user.getReservationList().add(reservation);
+        return reservation.getId();
+    }
+
+    @Transactional
+    public void modifyReservation(Long id,ReservationRequestDto reservationRequestDto){
+        cancleReservation(id);
+        makeReservation(new ReservationRequestDto(reservationRequestDto.getTime(),reservationRequestDto.getDoctorname()));
     }
 
 

@@ -8,7 +8,6 @@ import com.example.hospital.web.hospital.domain.Hospital;
 import com.example.hospital.web.hospital.domain.HospitalRepository;
 import com.example.hospital.web.reservation.domain.Reservation;
 import com.example.hospital.web.reservation.domain.ReservationRepository;
-import com.example.hospital.web.reservation.dto.ReservationModifyRequestDto;
 import com.example.hospital.web.reservation.dto.ReservationRequestDto;
 import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.domain.UserRepository;
@@ -69,10 +68,10 @@ class ReservationServiceTest {
     @Test
     @DisplayName("예약을 취소하면 의사의 리스트 환자의 리스트에서 모두 없어진다")
     public void cancleReservationTest(){
-        Long 안철수 = userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
-        Long 안철수5 = userService.makeReservation(new ReservationRequestDto(LocalDateTime.now().plusHours(5), "안철수"));
-        Long 김영희 = userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "김영희"));
-        Long 박태수 = userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "박태수"));
+        Long 안철수 = reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
+        Long 안철수5 = reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now().plusHours(5), "안철수"));
+        Long 김영희 = reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "김영희"));
+        Long 박태수 = reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "박태수"));
         String s = SecurityUtil.getCurrentUsername().get();
         User user = userRepository.findByUserNamefetchReservation(s);
         Doctor 안철수1 = doctorRepository.findByDoctorNamefetchReservation("안철수");
@@ -92,10 +91,10 @@ class ReservationServiceTest {
     @Test
     @DisplayName("예약 변경 테스트")
     public void modifyReservationTest(){
-        Long 안철수 = userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
-        Long 안철수5 = userService.makeReservation(new ReservationRequestDto(LocalDateTime.now().plusHours(5), "안철수"));
-        Long 김영희 = userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "김영희"));
-        Long 박태수 = userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "박태수"));
+        Long 안철수 = reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
+        Long 안철수5 = reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now().plusHours(5), "안철수"));
+        Long 김영희 = reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "김영희"));
+        Long 박태수 = reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "박태수"));
         String s = SecurityUtil.getCurrentUsername().get();
         User user = userRepository.findByUserNamefetchReservation(s);
         Doctor 안철수1 = doctorRepository.findByDoctorNamefetchReservation("안철수");
@@ -105,7 +104,7 @@ class ReservationServiceTest {
         assertThat(all.size()).isEqualTo(4);
         assertThat(안철수1.getReservationList().size()).isEqualTo(2);
         assertThat(김영희1.getReservationList().size()).isEqualTo(1);
-        reservationService.modifyReservation(new ReservationModifyRequestDto(LocalDateTime.now().plusHours(2),안철수,"김영희"));
+        reservationService.modifyReservation(안철수,new ReservationRequestDto(LocalDateTime.now().plusHours(2),"김영희"));
         User user1 = userRepository.findByUserNamefetchReservation(s);
         Doctor 안철수2 = doctorRepository.findByDoctorNamefetchReservation("안철수");
         Doctor 김영희2 = doctorRepository.findByDoctorNamefetchReservation("김영희");

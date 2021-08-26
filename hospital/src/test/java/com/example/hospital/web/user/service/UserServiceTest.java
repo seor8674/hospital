@@ -12,6 +12,7 @@ import com.example.hospital.web.reservation.domain.Reservation;
 import com.example.hospital.web.reservation.domain.ReservationRepository;
 import com.example.hospital.web.reservation.dto.ReservationRequestDto;
 import com.example.hospital.web.reservation.dto.ReservationResponseDto;
+import com.example.hospital.web.reservation.service.ReservationService;
 import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.domain.UserRepository;
 
@@ -53,6 +54,9 @@ class UserServiceTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ReservationService reservationService;
+
 
     @BeforeEach
     void init(){
@@ -74,7 +78,7 @@ class UserServiceTest {
     @Test
     @DisplayName("예약을 등록함면 doctor객체 user객체 모두 등록되어야한다")
     public void reservationRegistTest(){
-        Long aLong = userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(),  "안철수"));
+        Long aLong = reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(),  "안철수"));
         Reservation reservation = reservationRepository.findByIdfetchUserandDoctor(aLong);
         assertThat(reservation.getUser().getUserName()).isEqualTo("seor8674");
         assertThat(reservation.getDoctor().getName()).isEqualTo("안철수");
@@ -85,16 +89,16 @@ class UserServiceTest {
     @Test()
     @DisplayName("같은 시간대에 예약하려하면 에러가 발생한다.")
     public void reservationErrorTest(){
-        Long 안철수 = userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
+        Long 안철수 = reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
         int k=0;
         try {
-            userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
+            reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
         }catch (GlobalApiException e){
             k=1;
         }
         assertThat(k).isEqualTo(1);
         try {
-            userService.makeReservation(new ReservationRequestDto(LocalDateTime.now().plusHours(2), "안철수"));
+            reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now().plusHours(2), "안철수"));
         }catch (GlobalApiException e){
             k=2;
         }
@@ -104,9 +108,9 @@ class UserServiceTest {
     @Test
     @DisplayName("회원이 예약한 예약내역을 볼 수 있다.")
     public void findReservationTest(){
-        userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
-        userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "김영희"));
-        userService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "박태수"));
+        reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
+        reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "김영희"));
+        reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "박태수"));
         List<ReservationResponseDto> reservation = userService.findReservation(PageRequest.of(0, 2));
         assertThat(reservation.size()).isEqualTo(2);
     }

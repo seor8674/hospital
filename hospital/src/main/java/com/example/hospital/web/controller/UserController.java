@@ -9,7 +9,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -17,7 +20,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<User> signup(
-            @Validated @RequestBody UserDto userDto
+            @Valid @RequestBody UserDto userDto
     ) {
         System.out.println(userDto);
         return ResponseEntity.ok(userService.signup(userDto));

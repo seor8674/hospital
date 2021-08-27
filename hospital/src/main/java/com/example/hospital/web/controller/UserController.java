@@ -1,15 +1,18 @@
 package com.example.hospital.web.controller;
 
+import com.example.hospital.web.reservation.dto.ReservationResponseDto;
 import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.dto.UserDto;
 import com.example.hospital.web.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -36,5 +39,10 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<User> getUserInfo(@PathVariable String username) {
         return ResponseEntity.ok(userService.getUserWithAuthorities(username).get());
+    }
+
+    @GetMapping("/myreservation/{page}")
+    public List<ReservationResponseDto> getMyReservation(@PathVariable int page){
+        return userService.findReservation(PageRequest.of(page,10));
     }
 }

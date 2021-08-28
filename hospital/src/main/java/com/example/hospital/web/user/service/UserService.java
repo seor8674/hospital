@@ -69,12 +69,10 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public List<ReservationResponseDto> findReservation(Pageable pageable){
+    public Page<ReservationResponseDto> findReservation(Pageable pageable){
         String s = SecurityUtil.getCurrentUsername().orElseThrow(()->new GlobalApiException(ErrorCode.NONE_USER));
         Page<Reservation> userReservation = reservationRepository.findUserReservation(pageable,s);
-        return userReservation.getContent().stream()
-                .map(ReservationResponseDto::toResponseDto)
-                .collect(Collectors.toList());
+        return userReservation.map(ReservationResponseDto::toResponseDto);
     }
 
 

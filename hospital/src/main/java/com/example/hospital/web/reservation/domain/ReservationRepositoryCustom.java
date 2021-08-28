@@ -12,6 +12,8 @@ public interface ReservationRepositoryCustom {
 
     Page<Reservation> findUserReservation(Pageable pageable,String username);
 
+    void completeReservation();
+
 
 
 }

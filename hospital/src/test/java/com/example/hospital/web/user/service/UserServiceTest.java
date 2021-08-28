@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@WithMockUser(username = "seor8674")
+@WithMockUser(username = "test1")
 class UserServiceTest {
 
 
@@ -60,18 +60,7 @@ class UserServiceTest {
 
     @BeforeEach
     void init(){
-        userRepository.save(new User("seor8674","1234",32,"이환준",true));
-        userRepository.save(new User("unse7476","1234",17,"김영수",true));
-        Hospital hospital = new Hospital("강남병원", "서울");
-        hospitalRepository.save(hospital);
-        Hospital hospital1 = new Hospital("분당병원", "경기");
-        hospitalRepository.save(hospital1);
-        doctorRepository.save(new Doctor("안철수", Spetialization.internal,8,hospital));
-        doctorRepository.save(new Doctor("김영희", Spetialization.Dermatology,6,hospital1));
-        doctorRepository.save(new Doctor("박수찬", Spetialization.Neurosurgery,13,hospital));
-        doctorRepository.save(new Doctor("안민준", Spetialization.psychiatry,5,hospital1));
-        doctorRepository.save(new Doctor("신철민", Spetialization.Surgical,9,hospital));
-        doctorRepository.save(new Doctor("박태수", Spetialization.plastic_surgeon,15,hospital1));
+        userRepository.save(new User("test1","1234",32,"박진만",true));
     }
 
 
@@ -108,11 +97,11 @@ class UserServiceTest {
     @Test
     @DisplayName("회원이 예약한 예약내역을 볼 수 있다.")
     public void findReservationTest(){
-        reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "안철수"));
-        reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "김영희"));
-        reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "박태수"));
-        List<ReservationResponseDto> reservation = userService.findReservation(PageRequest.of(0, 2));
-        assertThat(reservation.size()).isEqualTo(2);
+        reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "김영수"));
+        reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "김철수"));
+        reservationService.makeReservation(new ReservationRequestDto(LocalDateTime.now(), "김효수"));
+        Page<ReservationResponseDto> reservation = userService.findReservation(PageRequest.of(0, 2));
+
     }
 
 

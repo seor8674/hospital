@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,12 +86,7 @@ class HospitalServiceTest {
         doctorRepository.save(new Doctor("조휘수",Spetialization.Dentistry,17,고려대병원));
     }
 
-    @Test
-    public void HospitalResponseDtoTest(){
-        PageRequest of = PageRequest.of(0, 3);
-        List<HospitalResponseDto> allHospital = hospitalService.getAllHospital(of);
-        assertThat(allHospital.size()).isEqualTo(3);
-    }
+
 
     @Test
     public void HospitalDetailResponseDtoTest(){

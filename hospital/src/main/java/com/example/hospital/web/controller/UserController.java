@@ -5,6 +5,7 @@ import com.example.hospital.web.user.domain.User;
 import com.example.hospital.web.user.dto.UserDto;
 import com.example.hospital.web.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/myreservation/{page}")
-    public List<ReservationResponseDto> getMyReservation(@PathVariable int page){
+    public Page<ReservationResponseDto> getMyReservation(@PathVariable int page){
         return userService.findReservation(PageRequest.of(page,10));
     }
 }

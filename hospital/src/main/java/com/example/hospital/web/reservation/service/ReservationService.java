@@ -54,5 +54,10 @@ public class ReservationService {
         makeReservation(new ReservationRequestDto(reservationRequestDto.getTime(),reservationRequestDto.getDoctorname()));
     }
 
+    @Transactional
+    public void Reservationcomplete(){
+        reservationRepository.completeReservation();
+    }
+
 
 }

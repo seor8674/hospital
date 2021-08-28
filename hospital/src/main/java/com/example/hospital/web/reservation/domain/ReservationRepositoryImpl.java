@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.example.hospital.web.doctor.domain.QDoctor.*;
@@ -55,4 +56,11 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
     }
 
 
+    @Override
+    public void completeReservation() {
+        jpaQueryFactory.delete(reservation)
+                .where(reservation.reservationDate.after(LocalDateTime.now()));
+        entityManager.flush();
+        entityManager.clear();
+    }
 }

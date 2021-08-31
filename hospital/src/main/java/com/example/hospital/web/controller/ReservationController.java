@@ -25,7 +25,7 @@ public class ReservationController {
         reservationService.cancleReservation(id);
     }
 
-    @PutMapping("/{reservationid}")
+    @PutMapping("/")
     public void modifyReservation(@PathVariable(value = "reservationid") Long id,@Valid @RequestBody ReservationRequestDto reservationRequestDto){
         reservationService.modifyReservation(id,reservationRequestDto);
     }

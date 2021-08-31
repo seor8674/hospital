@@ -29,12 +29,14 @@ public class ReservationService {
     private final UserService userService;
 
     @Transactional
-    public void cancleReservation(Long id){
+    public void cancleReservation(Long id)
+    {
         reservationRepository.deleteById(id);
     }
 
     @Transactional
-    public Long makeReservation(ReservationRequestDto reservationRequestDto){
+    public Long makeReservation(ReservationRequestDto reservationRequestDto)
+    {
         User user = userRepository.findByuserName(SecurityUtil.getCurrentUsername()
                 .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_USER))).get();
         Doctor doctor = doctorRepository.findByname(reservationRequestDto.getDoctorname())
@@ -49,13 +51,18 @@ public class ReservationService {
     }
 
     @Transactional
-    public void modifyReservation(Long id,ReservationRequestDto reservationRequestDto){
-        cancleReservation(id);
-        makeReservation(new ReservationRequestDto(reservationRequestDto.getTime(),reservationRequestDto.getDoctorname()));
+    public void modifyReservation(Long id,ReservationRequestDto reservationRequestDto)
+    {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_DATA));
+        Doctor doctor = doctorRepository.findByname(reservationRequestDto.getDoctorname())
+                .orElseThrow(() -> new GlobalApiException(ErrorCode.NONE_DATA));
+        reservation.updateReservation(reservation.getReservationDate(),doctor);
     }
 
     @Transactional
-    public void Reservationcomplete(){
+    public void Reservationcomplete()
+    {
         reservationRepository.completeReservation();
     }
 

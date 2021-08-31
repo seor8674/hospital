@@ -34,4 +34,10 @@ public class Reservation {
         this.doctor = doctor;
         this.user = user;
     }
+
+    public void updateReservation(LocalDateTime time,Doctor doctor)
+    {
+        this.reservationDate=time;
+        this.doctor=doctor;
+    }
 }

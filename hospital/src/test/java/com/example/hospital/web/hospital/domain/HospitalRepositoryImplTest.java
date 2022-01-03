@@ -53,7 +53,7 @@ class HospitalRepositoryImplTest {
 
     @Test
     @Transactional
-    @DisplayName("병원을 이름으로 조회한다.")
+    @DisplayName("병원을 이름으로 조회한다!!.")
     public void findBynameTest(){
         PageRequest pageRequest = PageRequest.of(0, 3);
         Page<Hospital> allHospital = hospitalRepository.findHospitalByname(pageRequest,"대병원");
